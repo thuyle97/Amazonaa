@@ -15,6 +15,9 @@ function App() {
               <LinkContainer to="/">
                 <Navbar.Brand>SQUISHAZON</Navbar.Brand>
               </LinkContainer>
+              <Nav className="me-auto">
+                <Link to="/cart" className="nav-link"></Link>
+              </Nav>
             </Container>
           </Navbar>
         </header>
