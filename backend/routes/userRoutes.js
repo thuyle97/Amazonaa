@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/userModel";
+import { generateToken } from "../utils";
 
 const userRouter = express.Router();
 
@@ -15,6 +16,7 @@ userRouter.post(
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
+          token: generateToken(user),
         });
         return;
       }
@@ -22,3 +24,5 @@ userRouter.post(
     res.status(401).send({ message: "Invalid email or password." });
   })
 );
+
+export default userRouter;
