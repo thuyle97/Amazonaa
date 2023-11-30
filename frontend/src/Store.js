@@ -40,6 +40,14 @@ function reducer(state, action) {
         ...state,
         userInfo: null,
       };
+    case "SAVE_SHIPPING_ADDRESS":
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          shippingAddress: action.payload,
+        },
+      };
     default:
       return state;
   }
