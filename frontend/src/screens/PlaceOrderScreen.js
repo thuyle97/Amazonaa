@@ -11,6 +11,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Store } from "../Store";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
+import LoadingBox from "../components/LoadingBox";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -180,6 +181,7 @@ export default function PlaceOrderScreen() {
                     Place Order
                   </Button>
                 </div>
+                {loading && <LoadingBox></LoadingBox>}
               </ListGroup>
             </Card.Body>
           </Card>
