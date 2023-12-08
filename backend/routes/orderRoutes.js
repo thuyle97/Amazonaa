@@ -1,7 +1,6 @@
 import express from "express";
-import User from "../models/userModel.js";
-import { generateToken } from "../utils.js";
-import bcrypt from "bcryptjs";
+import Order from "../models/orderModel.js";
+import { isAuth } from "../utils.js";
 import expressAsyncHandler from "express-async-handler";
 
 const orderRouter = express.Router();
@@ -20,6 +19,7 @@ orderRouter.post(
       totalPrice: req.body.totalPrice,
       user: req.user._id,
     });
+
     const order = await newOrder.save();
     res.status(201).send({ message: "New Order Created", order });
   })

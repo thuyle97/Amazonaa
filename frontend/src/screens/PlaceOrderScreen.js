@@ -2,15 +2,15 @@ import Axios from "axios";
 import React, { useContext, useEffect, useReducer } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
-import CheckoutSteps from "../components/CheckoutSteps";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import { Store } from "../Store";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
+import { Store } from "../Store";
+import CheckoutSteps from "../components/CheckoutSteps";
 import LoadingBox from "../components/LoadingBox";
 
 const reducer = (state, action) => {
@@ -29,15 +29,14 @@ const reducer = (state, action) => {
 export default function PlaceOrderScreen() {
   const navigate = useNavigate();
 
-  const [{ loading, error }, dispatch] = useReducer(reducer, {
+  const [{ loading }, dispatch] = useReducer(reducer, {
     loading: false,
-    error: "",
   });
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
 
-  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
+  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   cart.itemsPrice = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
@@ -48,6 +47,7 @@ export default function PlaceOrderScreen() {
   const placeOrderHandler = async () => {
     try {
       dispatch({ type: "CREATE_REQUEST" });
+
       const { data } = await Axios.post(
         "/api/orders",
         {
@@ -102,6 +102,7 @@ export default function PlaceOrderScreen() {
               <Link to="/shipping">Edit</Link>
             </Card.Body>
           </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Payment</Card.Title>
@@ -111,6 +112,7 @@ export default function PlaceOrderScreen() {
               <Link to="/payment">Edit</Link>
             </Card.Body>
           </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Items</Card.Title>
@@ -164,24 +166,25 @@ export default function PlaceOrderScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>
-                      {" "}
-                      <strong>Order Total</strong>
+                      <strong> Order Total</strong>
                     </Col>
                     <Col>
                       <strong>${cart.totalPrice.toFixed(2)}</strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>
-                <div className="d-grid">
-                  <Button
-                    type="button"
-                    onClick={placeOrderHandler}
-                    disabled={cart.cartItems.length === 0}
-                  >
-                    Place Order
-                  </Button>
-                </div>
-                {loading && <LoadingBox></LoadingBox>}
+                <ListGroup.Item>
+                  <div className="d-grid">
+                    <Button
+                      type="button"
+                      onClick={placeOrderHandler}
+                      disabled={cart.cartItems.length === 0}
+                    >
+                      Place Order
+                    </Button>
+                  </div>
+                  {loading && <LoadingBox></LoadingBox>}
+                </ListGroup.Item>
               </ListGroup>
             </Card.Body>
           </Card>
