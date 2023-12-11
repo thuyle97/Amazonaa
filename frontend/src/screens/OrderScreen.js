@@ -5,6 +5,10 @@ import { Store } from "../Store";
 import { useNavigate, useParams } from "react-router-dom";
 import { getError } from "../utils";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -59,6 +63,34 @@ export default function OrderScreen() {
   ) : error ? (
     <MessageBox variant="danger">{error}</MessageBox>
   ) : (
-    <div></div>
+    <div>
+      <Helmet>
+        <title>Order {orderId}</title>
+      </Helmet>
+      <h1 className="my-3">Order {orderId}</h1>
+      <Row>
+        <Col md={8}>
+          <Card className="mb-3">
+            <Card.Body>
+              <Card.Title>Shipping</Card.Title>
+              <Card.Text>
+                <strong>Name:</strong> {order.shippingAddress.fullName} <br />
+                <strong>Address: </strong>
+                {order.shippingAddress.address},{order.shippingAddress.city},{" "}
+                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.country}
+              </Card.Text>
+              {order.isDelivered ? (
+                <MessageBox variant="success">
+                  Delivered at {order.deliveredAt}
+                </MessageBox>
+              ) : (
+                <MessageBox variant="danger">Not Delivered</MessageBox>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 }
