@@ -41,6 +41,20 @@ export default function OrderScreen() {
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { value: order.totalPrice },
+          },
+        ],
+      })
+      .then((orderID) => {
+        return orderID;
+      });
+  }
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
