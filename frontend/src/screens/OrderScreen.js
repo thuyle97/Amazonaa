@@ -76,6 +76,10 @@ export default function OrderScreen() {
     });
   }
 
+  function onError(err) {
+    toast.error(getError(err));
+  }
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
