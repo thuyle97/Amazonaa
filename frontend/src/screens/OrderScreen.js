@@ -11,6 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import { toast } from "react-toastify";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -53,6 +54,26 @@ export default function OrderScreen() {
       .then((orderID) => {
         return orderID;
       });
+  }
+
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        dispatch({ type: "PAY_REQUEST" });
+        const { data } = await axios.put(
+          `/api/orders/${order._id}/pay`,
+          details,
+          {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({ type: "PAY_SUCCESS", payload: data });
+        toast.success("Order is paid");
+      } catch (err) {
+        dispatch({ type: "PAY_FAIL", payload: getError(err) });
+        toast.error(getError(err));
+      }
+    });
   }
 
   useEffect(() => {
