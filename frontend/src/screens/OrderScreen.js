@@ -42,11 +42,14 @@ export default function OrderScreen() {
   const { id: orderId } = params;
   const navigate = useNavigate();
 
-  const [{ loading, error, order }, dispatch] = useReducer(reducer, {
-    loading: true,
-    order: {},
-    error: "",
-  });
+  const [{ loading, error, order, successPay, loadingPay }, dispatch] =
+    useReducer(reducer, {
+      loading: true,
+      order: {},
+      error: "",
+      successPay: false,
+      loadingPay: false,
+    });
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
@@ -104,8 +107,11 @@ export default function OrderScreen() {
     if (!userInfo) {
       return navigate("/login");
     }
-    if (!order._id || (order._id && order._id !== orderId)) {
+    if (!order._id || successPay || (order._id && order._id !== orderId)) {
       fetchOrder();
+      if (successPay) {
+        dispatch({ type: "PAY_RESET" });
+      }
     } else {
       const loadPaypalScript = async () => {
         const { data: clientId } = await axios.get("/api/keys/paypal", {
@@ -122,7 +128,7 @@ export default function OrderScreen() {
       };
       loadPaypalScript();
     }
-  }, [order, userInfo, orderId, navigate, paypalDispatch]);
+  }, [order, userInfo, orderId, navigate, paypalDispatch, successPay]);
 
   return loading ? (
     <LoadingBox></LoadingBox>
@@ -236,6 +242,7 @@ export default function OrderScreen() {
                         ></PayPalButtons>
                       </div>
                     )}
+                    {loadingPay && <LoadingBox></LoadingBox>}
                   </ListGroup.Item>
                 )}
               </ListGroup>
