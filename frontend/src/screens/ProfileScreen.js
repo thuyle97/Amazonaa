@@ -1,8 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useReducer, useState } from "react";
 import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "UPDATE_REQUEST":
+      return { ...state, loadingUpdate: true };
+    case "UPDATE_SUCCESS":
+      return { ...state, loadingUpdate: false };
+    case "UPDATE_FAIL":
+      return { ...state, loadingUpdate: false };
+    default:
+      return state;
+  }
+};
 
 export default function ProfileScreen() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -12,7 +25,13 @@ export default function ProfileScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const submitHandler = async () => {};
+  const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
+    loadingUpdate: false,
+  });
+
+  const submitHandler = async (e) => {
+    e.preventDefault(); //stop refreshing the page behavior
+  };
 
   return (
     <div className="container small-container">
