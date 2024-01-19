@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 export default function ProfileScreen() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -51,6 +52,9 @@ export default function ProfileScreen() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
+        <div className="mb-3">
+          <Button type="submit">Update</Button>
+        </div>
       </form>
     </div>
   );
